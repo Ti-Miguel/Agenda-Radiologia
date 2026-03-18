@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agenda Radiologia</title>
+      <link rel="icon" type="image/jpeg" href="logo.jpeg">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo">
+        <h2>Agenda<br>Radiologia</h2>
+      </div>
+
+      <nav class="menu">
+        <button class="menu-btn active" data-section="dashboard">Dashboard</button>
+        <button class="menu-btn" data-section="lancamentos">Lançamentos</button>
+        <button class="menu-btn" data-section="radiologia">Radiologia</button>
+        <button class="menu-btn" data-section="historico">Histórico</button>
+        <button class="hub-button" id="btn-hub">← Voltar ao Hub</button>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <h1 id="pageTitle">Dashboard</h1>
+        <div class="topbar-date" id="dataAtual"></div>
+      </header>
+
+      <!-- DASHBOARD -->
+      <section id="dashboard" class="section active">
+        <div class="dashboard-filtro">
+          <label for="mesDashboard">Mês:</label>
+          <input type="month" id="mesDashboard" />
+        </div>
+
+        <div class="cards-grid">
+          <div class="card">
+            <h3>Panorâmicas no mês</h3>
+            <p id="dashPanoramicas">0</p>
+          </div>
+
+          <div class="card">
+            <h3>Documentações no mês</h3>
+            <p id="dashDocumentacoes">0</p>
+          </div>
+
+          <div class="card">
+            <h3>Bonificados</h3>
+            <p id="dashBonificados">0</p>
+          </div>
+
+          <div class="card">
+            <h3>Pagos</h3>
+            <p id="dashPagos">0</p>
+          </div>
+
+          <div class="card destaque">
+            <h3>Total recebido panorâmica</h3>
+            <p id="dashValorPanoramica">R$ 0,00</p>
+          </div>
+
+          <div class="card destaque">
+            <h3>Total recebido documentação</h3>
+            <p id="dashValorDocumentacao">R$ 0,00</p>
+          </div>
+        </div>
+
+        <div class="cards-grid unidades-grid">
+          <div class="card">
+            <h3>Maringá</h3>
+            <p id="dashMaringa">0</p>
+          </div>
+          <div class="card">
+            <h3>Sarandi</h3>
+            <p id="dashSarandi">0</p>
+          </div>
+          <div class="card">
+            <h3>Mandacaru</h3>
+            <p id="dashMandacaru">0</p>
+          </div>
+        </div>
+
+        <div class="painel">
+          <h3>Resumo do mês</h3>
+          <div id="resumoDashboard" class="resumo-dashboard"></div>
+        </div>
+      </section>
+
+      <!-- LANÇAMENTOS -->
+      <section id="lancamentos" class="section">
+        <div class="form-card">
+          <h2>Novo lançamento</h2>
+
+          <form id="formLancamento">
+            <input type="hidden" id="editId" />
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Nome do paciente</label>
+                <input type="text" id="nome" required />
+              </div>
+
+              <div class="form-group">
+                <label>Data de nascimento</label>
+                <input type="date" id="nascimento" required />
+              </div>
+
+              <div class="form-group">
+                <label>CPF</label>
+                <input type="text" id="cpf" maxlength="14" required />
+              </div>
+
+              <div class="form-group">
+                <label>Telefone contato</label>
+                <input type="text" id="telefone" required />
+              </div>
+
+              <div class="form-group">
+                <label>Data do lançamento</label>
+                <input type="date" id="dataLancamento" readonly />
+              </div>
+
+              <div class="form-group">
+                <label>Pagamento</label>
+                <select id="statusPagamento" required>
+                  <option value="">Selecione</option>
+                  <option value="Pago">Pago</option>
+                  <option value="Bonificado">Bonificado</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Tipo de exame</label>
+                <select id="tipoExame" required>
+                  <option value="">Selecione</option>
+                  <option value="Panorâmica">Panorâmica</option>
+                  <option value="Documentação">Documentação</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+  <label>Valor pago</label>
+  <input type="number" id="valorPago" step="0.01" min="0" placeholder="Digite o valor quando for pago" />
+</div>
+
+              <div class="form-group">
+                <label>Unidade</label>
+                <select id="unidade" required>
+                  <option value="">Selecione</option>
+                  <option value="Maringá">Maringá</option>
+                  <option value="Sarandi">Sarandi</option>
+                  <option value="Mandacaru">Mandacaru</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Quem lançou</label>
+                <select id="quemLancou" required>
+                  <option value="">Selecione</option>
+                  <option value="Adrianny">Adrianny</option>
+                  <option value="Dhully">Dhully</option>
+                  <option value="Karen">Karen</option>
+                  <option value="Fabiana">Fabiana</option>
+                  <option value="Geovana">Geovana</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn primary">Salvar lançamento</button>
+              <button type="button" class="btn secondary" id="btnCancelarEdicao">Cancelar edição</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="painel">
+          <h3>Lançamentos de hoje</h3>
+          <div id="listaHojeLancamentos" class="table-responsive"></div>
+        </div>
+      </section>
+
+      <!-- RADIOLOGIA -->
+      <section id="radiologia" class="section">
+        <div class="painel">
+          <h2>Radiologia - Lançamentos do dia</h2>
+          <div id="listaRadiologiaHoje" class="table-responsive"></div>
+        </div>
+      </section>
+
+      <!-- HISTÓRICO -->
+      <section id="historico" class="section">
+        <div class="painel">
+          <h2>Relatório completo</h2>
+
+          <div class="filtros-grid">
+            <div class="form-group">
+              <label>Data inicial</label>
+              <input type="date" id="filtroDataInicio" />
+            </div>
+
+            <div class="form-group">
+              <label>Data final</label>
+              <input type="date" id="filtroDataFim" />
+            </div>
+
+            <div class="form-group">
+              <label>Recepcionista</label>
+              <select id="filtroRecepcionista">
+                <option value="">Todos</option>
+                <option value="Adrianny">Adrianny</option>
+                <option value="Dhully">Dhully</option>
+                <option value="Karen">Karen</option>
+                <option value="Fabiana">Fabiana</option>
+                <option value="Geovana">Geovana</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Tipo de exame</label>
+              <select id="filtroTipo">
+                <option value="">Todos</option>
+                <option value="Panorâmica">Panorâmica</option>
+                <option value="Documentação">Documentação</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Unidade</label>
+              <select id="filtroUnidade">
+                <option value="">Todas</option>
+                <option value="Maringá">Maringá</option>
+                <option value="Sarandi">Sarandi</option>
+                <option value="Mandacaru">Mandacaru</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Status pagamento</label>
+              <select id="filtroPagamento">
+                <option value="">Todos</option>
+                <option value="Pago">Pago</option>
+                <option value="Bonificado">Bonificado</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="filtro-actions">
+            <button class="btn primary" id="btnFiltrar">Filtrar</button>
+            <button class="btn secondary" id="btnLimparFiltros">Limpar</button>
+          </div>
+
+          <div id="resumoHistorico" class="resumo-dashboard"></div>
+          <div id="listaHistorico" class="table-responsive"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
