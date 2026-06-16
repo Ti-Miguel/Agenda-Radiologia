@@ -399,7 +399,9 @@ async function renderRadiologia() {
     <table>
       <thead>
         <tr>
-          <th>Paciente</th>
+                  <th>Data</th>
+<th>Horário</th>
+<th>Paciente</th>
           <th>Nascimento</th>
           <th>CPF</th>
           <th>Telefone</th>
@@ -413,6 +415,8 @@ async function renderRadiologia() {
       <tbody>
         ${lista.map(item => `
           <tr>
+                      <td>${formatarDataBR(item.data_lancamento || item.dataLancamento)}</td>
+          <td>${formatarHora(item.horario_lancamento)}</td>
             <td>${item.nome}</td>
             <td>${formatarDataBR(item.nascimento)}</td>
             <td>${item.cpf}</td>
@@ -526,6 +530,7 @@ function montarTabelaLancamentos(lista, comAcoes = false) {
       <thead>
         <tr>
           <th>Data</th>
+        <th>Horário</th>
           <th>Paciente</th>
           <th>CPF</th>
           <th>Telefone</th>
@@ -541,6 +546,7 @@ function montarTabelaLancamentos(lista, comAcoes = false) {
         ${lista.map(item => `
           <tr>
             <td>${formatarDataBR(item.data_lancamento || item.dataLancamento)}</td>
+            <td>${formatarHora(item.horario_lancamento)}</td>
             <td>${item.nome}</td>
             <td>${item.cpf}</td>
             <td>${item.telefone}</td>
@@ -629,6 +635,17 @@ function formatarDataBR(data) {
   const partes = data.split("-");
   if (partes.length !== 3) return data;
   return `${partes[2]}/${partes[1]}/${partes[0]}`;
+}
+
+function formatarHora(hora) {
+  if (!hora) return "";
+
+  // Se vier como "14:35:22"
+  if (hora.includes(":")) {
+    return hora.substring(0, 5);
+  }
+
+  return hora;
 }
 
 window.editarLancamento = editarLancamento;

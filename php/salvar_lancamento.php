@@ -13,7 +13,9 @@ $tipo_exame = $_POST['tipo_exame'] ?? '';
 $valor_pago = $_POST['valor_pago'] ?? 0;
 $unidade = $_POST['unidade'] ?? '';
 $quem_lancou = $_POST['quem_lancou'] ?? '';
+
 $data_lancamento = $_POST['data_lancamento'] ?? date('Y-m-d');
+$horario_lancamento = date('H:i:s');
 
 if ($status_pagamento === 'Bonificado') {
     $valor_pago = 0;
@@ -23,21 +25,48 @@ if (
     empty($nome) || empty($nascimento) || empty($cpf) || empty($telefone) ||
     empty($status_pagamento) || empty($tipo_exame) || empty($unidade) || empty($quem_lancou)
 ) {
-    echo json_encode(['success' => false, 'message' => 'Preencha todos os campos obrigatórios.']);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Preencha todos os campos obrigatórios.'
+    ]);
     exit;
 }
 
-$stmt = $conn->prepare("INSERT INTO lancamentos_radiologia 
-(nome, nascimento, cpf, telefone, data_lancamento, status_pagamento, tipo_exame, valor_pago, unidade, quem_lancou, realizado)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Não')");
+$stmt = $conn->prepare("
+    INSERT INTO lancamentos_radiologia 
+    (
+        nome,
+        nascimento,
+        cpf,
+        telefone,
+        data_lancamento,
+        horario_lancamento,
+        status_pagamento,
+        tipo_exame,
+        valor_pago,
+        unidade,
+        quem_lancou,
+        realizado
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Não')
+");
+
+if (!$stmt) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Erro no prepare: ' . $conn->error
+    ]);
+    exit;
+}
 
 $stmt->bind_param(
-    "sssssssdss",
+    "ssssssssdss",
     $nome,
     $nascimento,
     $cpf,
     $telefone,
     $data_lancamento,
+    $horario_lancamento,
     $status_pagamento,
     $tipo_exame,
     $valor_pago,
@@ -46,9 +75,15 @@ $stmt->bind_param(
 );
 
 if ($stmt->execute()) {
-    echo json_encode(['success' => true, 'message' => 'Lançamento salvo com sucesso!']);
+    echo json_encode([
+        'success' => true,
+        'message' => 'Lançamento salvo com sucesso!'
+    ]);
 } else {
-    echo json_encode(['success' => false, 'message' => 'Erro ao salvar lançamento.']);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Erro ao salvar: ' . $stmt->error
+    ]);
 }
 
 $stmt->close();
