@@ -16,6 +16,8 @@ const tipoExame = document.getElementById("tipoExame");
 const valorPago = document.getElementById("valorPago");
 const unidade = document.getElementById("unidade");
 const quemLancou = document.getElementById("quemLancou");
+const dr = document.getElementById("dr");
+const filtroDr = document.getElementById("filtroDr");
 
 const listaHojeLancamentos = document.getElementById("listaHojeLancamentos");
 const listaRadiologiaHoje = document.getElementById("listaRadiologiaHoje");
@@ -162,6 +164,7 @@ async function salvarLancamento(e) {
   formData.append("nascimento", nascimento.value);
   formData.append("cpf", cpf.value.trim());
   formData.append("telefone", telefone.value.trim());
+  formData.append("dr", dr.value.trim());
   formData.append("status_pagamento", statusPagamento.value);
   formData.append("tipo_exame", tipoExame.value);
   formData.append("valor_pago", valorFinal);
@@ -195,6 +198,8 @@ async function salvarLancamento(e) {
   editId.value = "";
   dataLancamento.value = getHoje();
   controlarCampoValor();
+  
+  
 
   await renderizarTudo();
 
@@ -231,6 +236,7 @@ async function editarLancamento(id) {
   nascimento.value = lancamento.nascimento || "";
   cpf.value = lancamento.cpf || "";
   telefone.value = lancamento.telefone || "";
+  dr.value = lancamento.dr || "";
   dataLancamento.value = getHoje();
   statusPagamento.value = lancamento.status_pagamento || "";
   tipoExame.value = lancamento.tipo_exame || "";
@@ -404,6 +410,7 @@ async function renderRadiologia() {
 <th>Paciente</th>
           <th>Nascimento</th>
           <th>CPF</th>
+          <th>Dr.</th>
           <th>Telefone</th>
           <th>Exame</th>
           <th>Unidade</th>
@@ -420,6 +427,7 @@ async function renderRadiologia() {
             <td>${item.nome}</td>
             <td>${formatarDataBR(item.nascimento)}</td>
             <td>${item.cpf}</td>
+            <td>${item.dr || ""}</td>
             <td>${item.telefone}</td>
             <td>${item.tipo_exame || item.tipoExame}</td>
             <td>${item.unidade}</td>
@@ -495,6 +503,9 @@ function aplicarFiltros(lista) {
     const tipo = filtroTipo.value;
     const un = filtroUnidade.value;
     const pagamento = filtroPagamento.value;
+    const drItem = item.dr || "";
+const drFiltro = filtroDr.value.trim().toLowerCase();
+const passouDr = !drFiltro || drItem.toLowerCase().includes(drFiltro);
 
     const passouDataInicio = !inicio || dataItem >= inicio;
     const passouDataFim = !fim || dataItem <= fim;
@@ -509,7 +520,8 @@ function aplicarFiltros(lista) {
       passouRecepcionista &&
       passouTipo &&
       passouUnidade &&
-      passouPagamento
+      passouPagamento &&
+      passouDr
     );
   });
 }
@@ -520,6 +532,7 @@ async function limparFiltros() {
   filtroRecepcionista.value = "";
   filtroTipo.value = "";
   filtroUnidade.value = "";
+  filtroDr.value = "";
   filtroPagamento.value = "";
   await renderHistorico();
 }
@@ -533,6 +546,7 @@ function montarTabelaLancamentos(lista, comAcoes = false) {
         <th>Horário</th>
           <th>Paciente</th>
           <th>CPF</th>
+        <th>Dr.</th>
           <th>Telefone</th>
           <th>Exame</th>
           <th>Valor</th>
@@ -549,6 +563,7 @@ function montarTabelaLancamentos(lista, comAcoes = false) {
             <td>${formatarHora(item.horario_lancamento)}</td>
             <td>${item.nome}</td>
             <td>${item.cpf}</td>
+            <td>${item.dr || ""}</td>
             <td>${item.telefone}</td>
             <td>${item.tipo_exame || item.tipoExame}</td>
             <td>${formatarMoeda(item.valor_pago || item.valorPago || 0)}</td>
@@ -585,6 +600,7 @@ function montarTabelaHistorico(lista) {
           <th>Paciente</th>
           <th>Nascimento</th>
           <th>CPF</th>
+          <th>Dr.</th>
           <th>Telefone</th>
           <th>Exame</th>
           <th>Valor</th>
@@ -601,6 +617,7 @@ function montarTabelaHistorico(lista) {
             <td>${item.nome}</td>
             <td>${formatarDataBR(item.nascimento)}</td>
             <td>${item.cpf}</td>
+            <td>${item.dr || ""}</td>
             <td>${item.telefone}</td>
             <td>${item.tipo_exame || item.tipoExame}</td>
             <td>${formatarMoeda(item.valor_pago || item.valorPago || 0)}</td>
